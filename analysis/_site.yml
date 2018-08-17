@@ -1,14 +1,16 @@
-name: "prueba_3"
+name: "Dimensions of Redistribution"
 output_dir: "../docs"
 navbar:
-  title: "prueba_3"
+  title: "Project: Dimensions of redistribution"
   left:
-    - text: "Home"
+    - text: "Inicio"
       href: index.html
-    - text: "About"
+    - text: "Sobre"
       href: about.html
-    - text: "License"
+    - text: "Licencia"
       href: license.html
+    - text: "Manuscript"
+      href: manuscript.html
   right:
     - icon: fa-github
       href: https://github.com/jdblischak/workflowr

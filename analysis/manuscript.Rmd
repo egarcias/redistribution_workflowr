@@ -24,6 +24,8 @@ pacman::p_load(lme4,foreign,stargazer, psych,texreg,
 
 # Another change
 
+# Other change from github cloud
+
 ## Mini intro (494 words)
 [Problem]
 The increasing levels of economic inequality have had a profound impact on societies. Indeed, more unequal countries tend to report worse indicators in well-being issues (e.g. health, security, education), than less unequal countries (Wilkinson & Pickett, 2015, 2017). To reduce economic inequality and its pernicious effects, more redistributive measurements are needed. That is,  to implement taxes and social transfer policies that redistribute resources within a society (OECD, 2014; World Inequality Report, 2017).

@@ -20,13 +20,7 @@ pacman::p_load(lme4,foreign,stargazer, psych,texreg,
 
 ```
 
-# Introduction (1300 words aprox) change trial second trial third trial
-
-# Another change
-
-# Other change from github cloud
-
-# Change from the local repository
+# Introduction (1300 words aprox)
 
 ## Mini intro (494 words)
 [Problem]

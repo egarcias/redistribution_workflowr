@@ -20,7 +20,7 @@ pacman::p_load(lme4,foreign,stargazer, psych,texreg,
 
 ```
 
-# Introduction (1300 words aprox) change trial
+# Introduction (1300 words aprox) change trial second trial third trial
 
 ## Mini intro (494 words)
 [Problem]

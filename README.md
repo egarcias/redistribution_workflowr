@@ -2,9 +2,9 @@
 
 The rationale of this project contains four main folders:
 
-nalysis: Rmarkdown files to build the documents, both for the analysis, manuscript, and overall features of a website (if intended)
+analysis: Rmarkdown files to build the documents, both for the analysis, manuscript, and overall features of a website (if intended)
 
-ocs: Html files rendered by Rmarkdown files. If wanted, this documents can become a website powered by GitHub webpages.
+docs: Html files rendered by Rmarkdown files. If wanted, this documents can become a website powered by GitHub webpages.
 
 output: All other documents related to the project (questionnaires, materials, tables, etc.)
 

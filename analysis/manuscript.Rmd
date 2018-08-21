@@ -1,4 +1,4 @@
-behaviour---
+---
 title: "Taking from the rich or giving to the poor: Evidence for a two-dimension measure of support for redistribution"
 date: "`r Sys.Date()`"
 output:

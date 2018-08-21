@@ -532,19 +532,83 @@ sjt.corr(data2[,c("redis_reg","redis_prov",
                         "Perceived income gap","Ideal income gap","General perception of inequality","Frequency perception of inequality",
                         "Income", "Subjective status", "Educational level"))
 
-fit <- lm(redis ~ lnpergap + pergral + desfrec +
-            framing*merit+ framing*jse+
-            ideopol + sexo + edad2,
-          data= data2)
-summary(fit)
+# creating Data 3 for regression analysis
 
-fit2 <- lm(redis ~ framing*jse + Q1_desgral +
-             ideol + jse +
-             sexo + edad, data = data1)
+data2$departamento[data2$departamento=="españa"] <- NA ### discarding a case from Spain
+
+data2$depto2 <- as.factor(data2$departamento)
+data2$depto2[data2$depto2==""] <-  NA
+
+data2$depto2 <- droplevels(data2$depto2)
+
+ggplot(data=na.omit(data2), aes(depto2,jse), na.rm=TRUE) +
+  geom_violin(scale="count", aes(fill = factor(depto2)))
+
+names(data2)
+
+# centering predictors
+data2$lnpergap_cen <- as.numeric(scale(data2$lnpergap, center = TRUE, scale = FALSE))
+data2$lnidegap_cen <- as.numeric(scale(data2$lnidgap, center = TRUE, scale = FALSE))
+data2$framing_cen <- as.numeric(scale(data2$framing, center = TRUE, scale = FALSE))
+data2$menostien_cen <- as.numeric(scale(data2$menostien, center = TRUE, scale = FALSE))
+data2$mastien_cen <- as.numeric(scale(data2$mastien, center = TRUE, scale = FALSE))
+data2$pergral_cen <- as.numeric(scale(data2$pergral, center = TRUE, scale = FALSE))
+data2$merit_cen <- as.numeric(scale(data2$merit, center = TRUE, scale = FALSE))
+data2$merit_duro_cen <- as.numeric(scale(data2$merit_duro, center = TRUE, scale = FALSE))
+data2$merit_perc_cen <- as.numeric(scale(data2$merit_perc, center = TRUE, scale = FALSE))
+data2$jse_cen <- as.numeric(scale(data2$jse, center = TRUE, scale = FALSE))
+
+
+
+
+fit1 <- lm(redis_reg ~ lnpergap_cen + pergral_cen + desfrec + framing_cen + jse_cen +
+                        sexo + edad2 + statsub + ingresos + educa,
+          data= data2)
+
+fit2 <- lm(redis_reg ~ lnpergap_cen + pergral_cen + desfrec + framing_cen + #percepciones desigualdad
+            jse_cen + # ideología que justifica el sistema
+            framing_cen*jse_cen + lnpergap_cen*jse_cen+ # interacciones
+            sexo + edad2 + statsub + ingresos + educa,# control por ses y sociodemograficas
+            #control efectos fijos región
+           data= data2)
+
+fit3 <- lm(redis_prov ~ lnpergap_cen + pergral_cen + desfrec + framing_cen + #percepciones desigualdad
+             jse_cen + # ideología que justifica el sistema
+             framing_cen*jse_cen + lnpergap_cen*jse_cen+ # interacciones
+             sexo + edad2 + statsub + ingresos + educa, # control por ses y sociodemograficas
+              #control efectos fijos región
+           data= data2)
+
+
+sjt.lm(fit2, fit3,
+       emph.p = TRUE, p.zero = FALSE,show.se = TRUE,
+       string.dv = "Support for redistribution",
+       digits.est = 3,digits.std = 3)
+
+fit2 <- lm(redis_prov ~ lnpergap_cen + pergral_cen + desfrec + framing_cen +
+             framing_cen*merit+ framing_cen*jse+
+             ideopol + sexo + edad2 + statsub + ingresos + educa,
+           data= data2)
 summary(fit2)
 
-names(data1)
 
+plot_model(fit, type= "pred", terms = c("framing_cen", "jse_cen"))
+plot_model(fit2, type = "int",
+           title = "Interaction between Perceived inequality and Economic system justification on Support for redistribution",
+           axis.title = "Support for redistribution")
+get_model_data(fit2, type = "int")
 library(reghelper)
+graph_model_q(fit2, y='redis_reg', x='jse_cen', lines='framing_cen')
+graph_model_q(fit, y='redis_reg', x='lnpergap_cen', lines='jse_cen')
 
-graph_model(fit, y= redis, x=framing, lines = jse)
+#to create dummy code from continuous variable framing of inequality
+data2$framing_dum <- ifelse(data2$framing <= 5, 0,
+                            ifelse(data2$framing >= 5, 1, NA)
+                            )
+
+data2$depto_bogota_ref <- ifelse(data2$depto2 == "bogotá", 0, 0)
+data2$depto_centro <- ifelse(data2$depto2 == "boyacá, cundinamarca y casanare", 1, 0)
+data2$depto_caribe <- ifelse(data2$depto2 == "caribe", 1, 0)
+data2$depto_nariño <- ifelse(data2$depto2 == "nariño", 1, 0)
+data2$depto_valle <- ifelse(data2$depto2 == "valle del cauca", 1, 0)
+

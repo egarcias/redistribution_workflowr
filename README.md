@@ -11,3 +11,6 @@ output: All other documents related to the project (questionnaires, materials, t
 data: All the raw data
 
 code: R scripts and R environmet for other kind of analysis, mainly exploratory analysis that are not necesarilly reported in the Analysis files.
+
+(- test colaboración JC)
+

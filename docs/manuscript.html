@@ -10,9 +10,9 @@
 
 
 
-<meta name="date" content="2018-08-21" />
+<meta name="date" content="2019-04-10" />
 
-<title>Taking from the rich or giving to the poor: Evidence for a two-dimension measure of support for redistribution</title>
+<title>Taking from the rich or giving to the poor: The two faces of support for redistribution</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,12 +20,14 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -73,9 +75,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -100,6 +100,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -114,7 +117,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -134,6 +136,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -155,19 +194,181 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
 <!-- code folding -->
 
 
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -220,51 +421,57 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">Taking from the rich or giving to the poor: Evidence for a two-dimension measure of support for redistribution</h1>
-<h4 class="date"><em>2018-08-21</em></h4>
+<h1 class="title toc-ignore">Taking from the rich or giving to the poor: The two faces of support for redistribution</h1>
+<h4 class="date">2019-04-10</h4>
 
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-21</p>
+<p><strong>Last updated:</strong> 2019-04-10</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
-<p><details> <summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<details>
+<p><summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<details>
+<p><summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
 <p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180802)</code> </summary></p>
-<p>The command <code>set.seed(20180802)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+<details>
+<p><summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180802)</code> </summary></p>
+<p>The command <code>set.seed(20180802)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+<details>
+<p><summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
 <p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
 </details>
 </li>
 <li>
-<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/egarcias/redistribution_workflowr/tree/8e8b917047b7f64a857db06da4452300593cb8c0" target="_blank">8e8b917</a> </summary></p>
+<details>
+<p><summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/egarcias/redistribution_workflowr/tree/4442cd08c9e7a301d0a0d4a65672adaada81057b" target="_blank">4442cd0</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    code/.Rhistory
 
 Unstaged changes:
     Modified:   analysis/manuscript.Rmd
 
 </code></pre>
-Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</details>
 </li>
 </ul>
-<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<details>
+<summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
 <ul>
 <table style="border-collapse:separate; border-spacing:5px;">
 <thead>
@@ -287,6 +494,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/egarcias/redistribution_workflowr/blob/8db3492d7e8542371c814c29bb3582ff95dabdca/analysis/manuscript.Rmd" target="_blank">8db3492</a>
+</td>
+<td style="text-align:left;">
+juancarloscastillo
+</td>
+<td style="text-align:left;">
+2018-10-04
+</td>
+<td style="text-align:left;">
+Correcciones y edición
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/egarcias/redistribution_workflowr/c8d3c98eea255f9552c2665b769d3993a8464abb/docs/manuscript.html" target="_blank">c8d3c98</a>
+</td>
+<td style="text-align:left;">
+egarcias
+</td>
+<td style="text-align:left;">
+2018-08-21
+</td>
+<td style="text-align:left;">
+New html created by rmarkdown
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/egarcias/redistribution_workflowr/blob/9862e83470976f4086472d858f7f44ec0dc468e4/analysis/manuscript.Rmd" target="_blank">9862e83</a>
+</td>
+<td style="text-align:left;">
+egarcias
+</td>
+<td style="text-align:left;">
+2018-08-21
+</td>
+<td style="text-align:left;">
+Ammending typo
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -426,62 +684,61 @@ first draft manuscript
 </tbody>
 </table>
 </ul>
-<p></details></p>
+</details>
 <hr />
 <div id="introduction-1300-words-aprox" class="section level1">
 <h1>Introduction (1300 words aprox)</h1>
 <div id="mini-intro-494-words" class="section level2">
 <h2>Mini intro (494 words)</h2>
 <p>[Opening: importance of support for redistribution] Given the pervasive and pernicious effects of economic inequality on societies wellbeing (Wilkinson &amp; Pickett, 2015, 2017), redistribution gains more importance as one of the most effective ways of tackling economic inequality (OECD, 2014; World Inequality Report, 2017). To do so, redistribution use a set of taxes and social transfer policies through which different kind of resources are distributed among citizens (Luebker, 2014). However, the implementation of redistributive measurements is not just a default response of the governments but, under the assumption of a democratic system, it depends on citizens support for such public policies.</p>
-<p>[Justification 1: different responses of redistribution] Despite the general public desire to reduce economic inequality (Norton &amp; Ariely, xxxx), support for redistribution is not always held by the public in the same way. Though people might agree on having more effective government’s actions to reduce economic inequality, they also tend to show a general aversion toward raising taxes (Bartels, 2005), or might disapprove government spending on social services (Fong, 2001). Thus, support for redistribution should not be reduced to a general desire for reducing economic inequality, but it needs an explicit procedural dimension regarding how to do so. Indeed, McCall &amp; Kenworthy (2009) posited that individuals might demand more government redistribution by implementing more transfers to the poorer, by raising taxes to the richer; or they might just desire other government actions aimed to reduce inequality of opportunity by providing more services like social insurance, labour regulations.</p>
-<p>[Justification 2: literature overrepresent a desire for, rather than how to redistribute] However, empirical research tend to operationalize support for redistribution by a single item that reflect the general desire for the government to reduce economic inequality (e.g. <em>The government should reduce the income differences between those with higher incomes and those with lower incomes</em>), without saying anything about how to do so. Other indicators to operationalize support for redistribution focus on attitudes toward the welfare state (<em>references</em>), social spending (<em>references</em>), and behavior (<em>references</em>). Thus, researchers tend to use a quite diverse set of items to measure support for redistribution that might hamper the comparison of findings. Whilst people might agree that economic inequality should be reduced (desire), they might disagree about how to do so (procedures), which might reflect different dimensions of the same construct: a higher demand for redistribution by taking more from the well-off (e.g. taxes), or by providing more opportunities for the worst-off (e.g. social insurance).</p>
+<p>[Justification 1: different responses of redistribution] Despite the general public desire to reduce economic inequality (Norton &amp; Ariely, xxxx), support for redistribution is not always held by the public in the same way. Though people might agree on having more effective government’s actions to reduce economic inequality, they also tend to show a general aversion toward raising taxes (Bartels, 2005), or might disapprove government spending on social services (Fong, 2001). Thus, support for redistribution should not be reduced to a general desire for reducing economic inequality, but it needs an explicit procedural dimension regarding how to do so. Indeed, McCall &amp; Kenworthy (2009) posited that individuals might demand more government redistribution by implementing more transfers to the poorer through raising taxes to the richer, while others might just desire other government actions aimed to reduce inequality of opportunity by providing more services like social insurance and labor regulations.</p>
+<p>[Justification 2: literature overrepresent a desire for, rather than how to redistribute] However, empirical research tend to operationalize support for redistribution by a single item that reflect the general desire for the government to reduce economic inequality (e.g. <em>The government should reduce the income differences between those with higher incomes and those with lower incomes</em>), without saying anything about how to do so. Other indicators to operationalize support for redistribution focus on attitudes toward the welfare state (<em>references</em>), social spending (<em>references</em>), and behavior (<em>references</em>). Thus, researchers tend to use a quite diverse set of items to measure support for redistribution that might hamper the comparison of findings. Whilst people might agree that economic inequality should be reduced (desire), they might disagree about how to do so (procedures), which might reflect different dimensions of the same construct: a higher demand for redistribution by taking more from the well-off (e.g. taxes), or by providing more opportunities for the worst-off (e.g. social insurance).</p>
 <p>[Proposal: Aim of the paper] The aim of this research is to examine the dimensionality of support for redistribution measures. In line with McCall &amp; Kenworthy (2009), we argue that support for redistribution can be focused on the role of the government to redistribute resources (e.g. progressive taxation); or on the provision of more opportunities to the disadvantaged (e.g. social spending). To this end, we conducted two studies: in study 1 we explored the dimensionality of the items that we collected from the literature; and, in study 2, we confirmed the two-dimension structure of the measure, and provide evidence about the relationship of each dimension to perceptions and ideologies of inequality.</p>
 </div>
 <div id="support-for-redistribution-and-its-dimensionality-881-words-aprox." class="section level2">
 <h2>Support for redistribution and its dimensionality (881 words aprox.)</h2>
-<p>[Redistribution 1: Meanings] From an economic perspective, redistribution can be defined as the use of tax and transfer policies aimed to reduce economic inequality (Luebker, 2014). Thus, the redistribution of benefits and taxes according to the economic position of taxpayers become more individually expensive to the wealthy than to the poorer (Dimick, 2018). On the other hand, redistribution can be defined from an equality of opportunity perspective, which means that economic, social and cultural resources should be distributed in a way that equalizes the opportunities of everyone to get ahead (Roemer, 1998). In this sense, redistribution implies a level-the-playing field principle, by which outcomes will be determined by individual merit, not by individual background. Both perspectives are pivotal to reduce economic inequality, and do not compete to each other. In fact, effective strategies to reduce economic inequality demand a multidimensional government intervention aimed to provide more capabilities and resources to the public (see Atkinson, 2015).</p>
-<p>[Redistribution 2: different from other related constructs - welfarism] Though related, support for redistribution and attitudes toward welfare state policies are different constructs. Redistributive policies represent a procedural mechanism that enhance aggregate welfare (Kelly &amp; Enns, 2010); whereas welfare policies imply a whole institutional framework that articulates the responsibility of the government for a range and degree of social provision that redistribute income, risks and services (Mau, 2003). Thus, redistribution is more specific, and focuses on the allocation of means, goods, and opportunities in a given society, and represent a particular dimension of the welfare state (Roosma, 2012).</p>
-<p>[Redistribution 3: dimensions] Additionally, redistribution involves two separate propositions, a demanding side, related to redistributive voters preferences; and a supply side, related to the provision of public policies to meet people’s demands (McCarthy &amp; Pontusson, 2009). Individuals’ support for redistribution is embedded in the demanding side, and can also reflect different dimensions according to how individuals think that resources should be distributed, that is, who should contribute to and benefit from redistribution (Zimmerman, 2016). Thus, support for redistribution implies a procedural perspective about who should redistribute (e.g. the government), how to redistribute the resources (e.g. taxation, social spending), and who is going to benefit (e.g. all citizens, the disadvantaged).</p>
-<p>[Redistribution 4: different implications of dimensions of redistribution] Indeed, people’s support for redistribution is different when framed as raising taxes, or as providing people in need. For instance, raising taxes by a progressive taxation system is generally an unpopular policy, since people do not know how it works and benefits the whole society (including the better-off), and just stress the individual costs of paying more taxes (Bartels, 2003). But, at the same time, people facing higher socioeconomic risks tend to demand a stronger government intervention to provide social insurance (<em>reference</em>). Thus, each dimension of support for redistribution might be driven by different social psychological processes: whilst support for progressive taxation might be guided by self-interest (e.g. well-off would oppose to redistribution), support for social spending might be related to ideological beliefs of fairness (Alesina &amp; La Ferrara, 2005), attributions of poverty (Kluegel &amp; Smith, 1986), or prosocial behaviour (<em>reference</em>).</p>
+<p>[Redistribution 1: Meanings] Redistribution has a direct link with justice concerns, as it is based on the assumption that situations that generate inequality and social disadvantages should be compensated. In this sense, economic, social and cultural resources should be distributed in a way that equalizes the opportunities of everyone to get ahead (Roemer, 1998), in line with a level-the-playing field principle. From an economic perspective, redistributionn is related with economic tax and transfer policies aimed to reduce economic inequality (Luebker, 2014), having as a consequence that they are mostly dependent on the economic position of taxpayers and therefore become more individually expensive to the wealthy than to the poorer (Dimick, 2018). Consequently, the attitudes toward redistribution from the general public and particularly from the most affluent has become a key aspect of welfare state studies (Svallfors, 2007; Mau, 2003)</p>
+<p>[Redistribution 2: different from other related constructs - welfarism]</p>
+<p>Although related, support for redistribution and attitudes toward welfare state policies are different constructs. Redistributive policies represent a procedural mechanism that enhance aggregate welfare (Kelly &amp; Enns, 2010), whereas welfare policies imply a whole institutional framework that articulates the responsibility of the government for a range and degree of social provision that redistribute income, risks and services (Mau, 2003). Thus, redistribution is more specific and focuses on the allocation of means, goods, and opportunities in a given society, and represent a particular dimension of the welfare state (Roosma, 2012). [Este párrafo puede salir, creo que la diferencia entre ambos se deduce ahora del final del párrafo anterior - JC]</p>
+<p>[Redistribution 3: dimensions] Additionally, redistribution involves two separate propositions, a demanding side, related to redistributive voters preferences; and a supply side, related to the provision of public policies to meet people’s demands (McCarthy &amp; Pontusson, 2009). Individuals’ support for redistribution is embedded in the demanding side, and can also reflect different dimensions according to how individuals think that resources should be distributed, that is, who should contribute to and benefit from redistribution (Zimmerman, 2016). [Esto también puede salir -JC]</p>
+<p>[Redistribution 4: different implications of dimensions of redistribution] The support for redistribution can refer to different aspects, such as who should redistribute (e.g. the government), how to redistribute the resources (e.g. taxation, social spending), and who is going to benefit (e.g. all citizens, the disadvantaged). Indeed, people’s support for redistribution is different when framed as raising taxes, or as providing people in need. For instance, raising taxes by a progressive taxation system is generally an unpopular policy, since people do not know how it works and benefits the whole society (including the better-off), and just stress the individual costs of paying more taxes (Bartels, 2003). But, at the same time, people facing higher socioeconomic risks tend to demand a stronger government intervention to provide social insurance (<em>reference</em>). Thus, each dimension of support for redistribution might be driven by different social psychological processes: whilst support for progressive taxation might be guided by self-interest (e.g. well-off would oppose to redistribution), support for social spending might be related to ideological beliefs of fairness (Alesina &amp; La Ferrara, 2005), poverty attributions (Kluegel &amp; Smith, 1986), or prosocial behaviour (<em>reference</em>).</p>
 </div>
 <div id="measures-of-support-for-redistribution" class="section level2">
 <h2>Measures of support for redistribution</h2>
-<p>[Measures of redistribution: dimensions] Research on support for redistribution have been mainly conducted by using indicators from large scale surveys focusing on the role of the government, or on the taxation system. Although, both set indicators have been effectively used in the literature, they also have some shortcomings. On the one hand, asking for the role of the government seem to be more related to who should reduce income inequality, but not on the kind of redistributive policies to implement. On the other hand, support for progressive taxation is more related to how resources should be collected and redistributed, but it did not mention how they will be invested.</p>
-<p>[Measures of redistribution: indicators] There are a wide variety of indicators aimed to measure support for redistribution. Since there is no a validated measure of attitudes toward redistribution shared in the literature, researchers use different ways to operationalize support for redistribution: indicators coming from international surveys that stress the responsibility of the government (e.g. “It is the responsibility of the government to reduce the differences in income between people with high incomes and those with low incomes”, see ISSP, 2009); the role of the government to change redistributive structure (e.g. “The government should take measures to reduce differences in income levels” Dimick, 2018); the need to impose a progressive taxation system (e.g. “The government should increase taxes to give more help to the poor”, McCall et al., 2017; “High-incomee earners should pay more tax than low income earners”, Rodríguez-Bailón et al., 2017); the general acceptance about the current redistributive structure in a given context (e.g. “we need larger income differences as incentives for individual effort versus Incomes should be made more equal” Wulfgramm &amp; Starke, 2016; “Differences in income in [this country] are too large.” ISSP, 2009; Dallinger, 2010); or the endorsement of specific social policies (e.g. “Do you support more policies to increase the opportunities for children born in poor families and to foster more equality of opportunity, such as education policies?” Alesina, 2018; “Should social beneﬁts be cut in the future, should things stay as they are, or should social beneﬁts be extended?” Haack &amp; Sieweke, 2017); or even by using left-right political ideology (Iglesias et al., 2013) (see Table S1 at the supplementary material for full information items’s wording for indicators that aim to measure support for redistribution).</p>
-<p>[Measures of redistribution: overview and link to the aim of the research] Considering the wide variety of indicators researchers use to measure support for redistribution, comparing the findings published in the literature could be challenging. However, McCall &amp; Kenworthy (2009) propose that support for redistribution can be summarised as the endorsement of public policies aimed to redistribute economic resources, or as the government actions oriented to provide more opportunities to people in need. Thus, the aim of this study is to provide empirical evidence about this two-dimension structure of a measure of support for redistribution; and to show how each dimension is differently associated with a set of individual variables.</p>
+<p>[Measures of redistribution: dimensions] Research on support for redistribution have been mainly conducted by using indicators from large scale surveys focusing either on the role of government (who is redistributing) or the taxation system (how to redistribute). Although both indicators have been effectively used in the literature, they also have some shortcomings. On the one hand, asking for the role of the government seem to be more related to who should reduce income inequality, but not on the kind of redistributive policies to implement. On the other hand, support for progressive taxation is more related to how resources should be collected and redistributed, but it did not mention how they will be invested. [este párrafo se podría borrar - JC]</p>
+<p>[Measures of redistribution: indicators] Since there is no a validated measure of attitudes toward redistribution shared in the literature, researchers use different ways to operationalize support for redistribution. For instance, indicators coming from international surveys that stress the responsibility of the government (e.g. “It is the responsibility of the government to reduce the differences in income between people with high incomes and those with low incomes”, see ISSP, 2009); the role of the government to change redistributive structure (e.g. “The government should take measures to reduce differences in income levels” Dimick, 2018); the need to impose a progressive taxation system (e.g. “The government should increase taxes to give more help to the poor”, McCall et al., 2017; “High-incomee earners should pay more tax than low income earners”, Rodríguez-Bailón et al., 2017); the general acceptance about the current redistributive structure in a given context (e.g. “we need larger income differences as incentives for individual effort versus Incomes should be made more equal” Wulfgramm &amp; Starke, 2016; “Differences in income in [this country] are too large.” ISSP, 2009; Dallinger, 2010); or the endorsement of specific social policies (e.g. “Do you support more policies to increase the opportunities for children born in poor families and to foster more equality of opportunity, such as education policies?” Alesina, 2018; “Should social beneﬁts be cut in the future, should things stay as they are, or should social beneﬁts be extended?” Haack &amp; Sieweke, 2017); or even by using left-right political ideology (Iglesias et al., 2013) (see Table S1 at the supplementary material for full information items’s wording for indicators that aim to measure support for redistribution).</p>
+<p>[Measures of redistribution: overview and link to the aim of the research] Considering the wide variety of indicators researchers use to measure support for redistribution, comparing the variety of findings published in the literature becomes a challenging enterprise. One way to organize different approaches has been proposed by McCall &amp; Kenworthy (2009), who suggest that redistribution can be summarized, on the one hand, as the endorsement of public policies aimed to redistribute economic resources, and on the other hand as the government actions oriented to provide more opportunities to people in need. Although this sounds reasonable, to our knowledge so far there are no studies dedicated to the empirical test of the different dimensions of distributive attitudes. Thus, the main aim of this study is to provide empirical evidence about this two-dimensional structure of a measure of support for redistribution.</p>
 </div>
 </div>
 <div id="overview-of-the-current-reseach" class="section level1">
 <h1>Overview of the Current Reseach</h1>
-<p>The aim of the current studies is to provide empirical evidence about the dimensionality of support for redistribution measurement. We argue that there are at least two different dimensions of support for redistribution, that might have different implications on how we conceptualize and operationalize the public preferences for redistribution. Researchers in social sciences usually use single-item indicators to measure support for redistribution; or include behavioural measures about how to redistribute resources (i.e. prosocial behavior, dictatorship paradigm, etc.). As suggested by McCall and McCarthy (2009) people might have different responses toward inequality, either by increasing the role of the government to reduce inequality; or by increasing other government actions oriented to provide people in need. Under this framework we compiled a set of indicators used in the literature to account for redistribution (see Table 1), and empirically modelled both factors. Then, in Study 1 we tested a set of 10 items related to different ways to measure redistribution, and conducted exploratory factor analysis to examine the factor structure of those items. In Study 2, we used the same indicators of support for redistribution in a different sample, and conducted confirmatory factor analysis to confirm that the dimensionality was held. In addition, we test the reliability of the measure and the association between dimensions of support for redistribution with individuals’ ideologies.</p>
+<p>The aim of the current studies is to provide empirical evidence about the dimensionality of support for redistribution measurement. We argue that there are at least two different dimensions of support for redistribution, that might have different implications on how we conceptualize and operationalize the public preferences for redistribution. Researchers in social sciences usually use single-item indicators to measure support for redistribution; or include behavioural measures about how to redistribute resources (i.e. prosocial behavior, dictatorship paradigm, etc.). As suggested by McCall and McCarthy (2009) people might have different responses toward inequality, either by increasing the role of the government to reduce inequality; or by increasing other government actions oriented to provide people in need. Under this framework we compiled a set of indicators used in the literature to account for redistribution (see Table 1), and empirically modelled both factors. Then, . [este párrafo lo sacaría, creo que es redundante.]</p>
 </div>
-<div id="study-1" class="section level1">
-<h1>Study 1</h1>
-<p>The aim of the study 1 was to explore the factor structure of a set of items aimed to measure support for redistribution. Participants should rate their level of agreement with several claims regarding how resources should be distributed in a society. These items were included at the end of a questionnaire used in another project related to ideologies and perceptions of inequality.</p>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<p>Two studies are considered in this research. In Study 1 we tested a set of 10 items related to different ways to measure redistribution, and conducted exploratory factor analysis to examine the factor structure of those items. In Study 2, we used the same indicators of support for redistribution in a different sample, and conducted confirmatory factor analysis to confirm that the dimensionality was held. In addition, we test the reliability of the measure and the association between dimensions of support for redistribution with individuals’ ideologies.</p>
+<div id="study-1" class="section level2">
+<h2>Study 1</h2>
+<div id="participants" class="section level3">
+<h3>Participants</h3>
+<p>A total of 818 participants from the all the academic community of a public university in Colombia (students, academic, administrative and maintenance staff) responded to an open call to participante in a study about current social issues in Colombia (<em>M<sub>age</sub></em> = 29.77, <em>SD<sub>age</sub></em> = 12.77, 54.58% female). Participants were contacted through the University communications office by sending them an email with an open invitation to participate in this study. The invitation said that everyone from the univiersity community could participate voluntarily, and that this study was being conducted for academic purposes, taking special care of anonymity and confidentility of their responses. If agreed, participants were redirected to a questionnarie uploaded in online platform (Qualtrics), and signed an informed consent to continue with the study. Data was collected during April 2018.</p>
 </div>
-<div id="method" class="section level1">
-<h1>Method</h1>
-<div id="participants" class="section level2">
-<h2>Participants</h2>
-<p>A total of 818 participants from the all the academic community of a public university in Colombia (students, academic, administrative and maintenance staff) responded to an open call to participante in a study about current social issues in Colombia (<em>M<sub>age</sub></em> = 29.77, <em>SD<sub>age</sub></em> = 12.77, 54.58% female). Participants were contacted through the University communications office by sending them an email with an open invitation to participate in this study. The invitation said that everyone from the unviersity community could participate voluntarily, and that this study was being conducted for academic purposes, taking special care of anonymity and confidentility of their responses. If agreed, participants were redirected to a questionnarie uploaded in online platform (Qualtrics), and signed an informed consent to continue with the study. Data was collected during April 2018.</p>
+<div id="material" class="section level3">
+<h3>Material</h3>
+<p><em>Support for redistribution</em>: Participants completed a ten-item measure of support for redistribution (<em>M =</em> 5.21, <em>SD =</em> .85, alpha = .737). The items covered survey indicators usually used in the literature to operationalize support for redistribution (i.e. “The government should reduce income differences between the rich and the poor”), as well as related research that used different proxys indicators (e.g. welfare attitudes, preferences for progressive taxation and social spending). Respondents should rate their level of agreement with each statement on a 7-point scale ranging from 1 “strongly disagree” to 7 “strongly agree”. Wording of the items is shown in Table 1.</p>
 </div>
-<div id="material" class="section level2">
-<h2>Material</h2>
-<p><em>Support for redistribution</em>: Participants completed a ten-item measure of support for redistribution (<em>M =</em> 5.21, <em>SD =</em> .85, alpha = .737) we constured based on the literature review about measurmens of redistribution. These items covered survey items usually used in the literature to operationalize support for redistribution (i.e. “The government should reduce income differences between the rich and the poor”), as well as related research that used different proxys indicators (e.g. welfare attitudes, preferences for progressive taxation and social spending). Respondents should rate their level of agreement with each statement on a 7-point scale ranging from 1 “strongly disagree” to 7 “strongly agree”. Wording of the items is shown in Table 1.</p>
-</div>
-<div id="data-analysis" class="section level2">
-<h2>Data analysis</h2>
+<div id="data-analysis" class="section level3">
+<h3>Data analysis</h3>
 <p>We conducted a descriptive item analysis (mean, standard deviation, and skewness) and tested the reliability of the measurement (overall Chronbach’s alpha, alpha if deleted item, and item-test correlation). In order to examine the dimensionality of the scale, we conducted an exploratory factor analysis using principal-axis factor extraction with Minimum Residual procedure (minres) and varimax rotation, supported by Lavaan package (Rosseel, 2012) implemented for R software.</p>
 </div>
-</div>
-<div id="results-and-discussion" class="section level1">
-<h1>Results and discussion</h1>
+<div id="results-and-discussion" class="section level3">
+<h3>Results and discussion</h3>
 <p>As shown in Table 1, most of the items mean-scores are over the technical middle point of the scale (4), and are negatively skewed, which indicates that participants scored mostly in the right (“agreement”) side of the scale. However, participants tended to disagree in item 8 (“The government should increase taxes to provide more assistance to the most needed people”). Additionally, when examining the reliability measures of the scale, we got that the alpha if this item is deleted does not change (<em>alpha~if item-8 deleted~ =</em> .736) and this item reported the lowest correlation with the overall scale (<em>r<sub>item8-scale</sub> =</em> .325). Apart from this item, all the items contributed appropriately to the reliability of the measurement.</p>
-<table>
+<table style="width:100%;">
 <colgroup>
-<col width="76%" />
-<col width="4%" />
-<col width="4%" />
+<col width="78%" />
+<col width="3%" />
+<col width="3%" />
 <col width="4%" />
 <col width="4%" />
 <col width="5%" />
@@ -604,12 +861,12 @@ first draft manuscript
 </tbody>
 </table>
 <p>Although Parallel Analysis suggested a three-factor solution, both the screeplot and the underlying topic of the items, suggest a two-factor structure for the items about support for redistribution. Thus, Factor 1 represents the idea that the government should redistribute resources by increasing taxes; and Factor 2, subscribes to the idea that the government should increase social spending and provide more assistance to people in need (see Table 2).</p>
-<table style="width:100%;">
+<table>
 <colgroup>
-<col width="65%" />
-<col width="10%" />
-<col width="10%" />
-<col width="7%" />
+<col width="67%" />
+<col width="9%" />
+<col width="9%" />
+<col width="6%" />
 <col width="6%" />
 </colgroup>
 <thead>
@@ -715,45 +972,44 @@ first draft manuscript
 </tr>
 </tbody>
 </table>
-<p>The two-factor model provided poor fit indices, <em>X<sup>2</sup><sub>(gl=26)</sub> =</em> 154.74, <em>p &lt;.</em> 001, <em>RMSEA =</em> .065; <em>TLI =</em> .883); which might be because of two items loading simultaneously on both factors (see Table 2). Examining the content of those items, we realised that they mixed the idea that the government should redistribute resources and should help the disadvantaged. Therefore, we decided to exclude those items because of their content combine the two ideas underlying each factor, which is likely to lead to a poor discriminant association with factors. Thus, we conducted another exploratory factor analysis using the same data, but excluding the two items loading on both factors. We found that model fit indices considerably improved <em>X<sup>2</sup><sub>(gl=13)</sub> =</em> 56.72, <em>p&lt;</em> .001, <em>RMSEA =</em> .054; <em>TLI =</em> .929).</p>
+<p>The two-factor model provided poor fit indices, <em>X<sup>2</sup><sub>(gl=26)</sub> =</em> 154.74, <em>p &lt;.</em> 001, <em>RMSEA =</em> .065; <em>TLI =</em> .883); which might be because of two items loading simultaneously on both factors, which are "" and "" (see Table 2). Examining the content of those items, we realized that they mixed the idea that the government should redistribute resources and should help the disadvantaged. We conducted another exploratory factor analysis using the same data, but excluding the two items loading on both factors. We found that model fit indices considerably improved <em>X<sup>2</sup><sub>(gl=13)</sub> =</em> 56.72, <em>p&lt;</em> .001, <em>RMSEA =</em> .054; <em>TLI =</em> .929). [esta parte es confusa ya que para tomar decisiones debería basarse en los indicadores tradicionales de EFA como loadings, uniqueness, SSloadings, etc. ] With this proposal it becomes more clear the distinction between the two dimensions of redistributive attitudes, which allow us to move to the next confirmatory step.</p>
 </div>
-<div id="study-2" class="section level1">
-<h1>Study 2</h1>
-<p>In Study 1, exploratory analyses provided us with evidence regarding the two-factor structure of people support for redistribution: either by endorsing the role of the government to redistribute and implement a progressive taxation system, or by increasing the social spending and assisting the disadvantaged. Thus, we decided to replicate these findings in a new sample, and provide further evidence of the implications of such dimensionality. The aim of Study 2 was to confirm the two-factor structure of the support for redistribution measurement, and test some of its associations with variables related to inequality justification, such as ideologies and socioeconomic status. This study is part of a broader project about perceptions of inequality and redistribution in Colombia.</p>
 </div>
-<div id="method-1" class="section level1">
-<h1>Method</h1>
-<div id="participants-1" class="section level2">
-<h2>Participants</h2>
-<p>In Study 2, 1837 participants from eight universities along different regions of Colombia participated in a research about perceptions of inequality and redistribution (<em>M<sub>age</sub> =</em> 21.99, <em>SD<sub>age</sub> =</em> 5.46, 65.75% female; 81.24% were undergraduates, 11.49% were enrolled in work training, 3.73% reached up to high school, and 3.52% held postgraduate education). Participants responded to an open call delivered by each university to participate in a study about social issues in Colombia. Participants were informed about the goals and conditions of the research and, if agreed in taking the study, they signed an informed consent and accessed to an online questionnaire. Data was collected during May 2018.</p>
+<div id="study-2" class="section level2">
+<h2>Study 2</h2>
+<p>The aim of Study 2 was to confirm the two-factor structure of the support for redistribution measurement, as well as to test some of its associations with variables related to inequality justification, such as ideologies and socioeconomic status. This study is part of a broader project about perceptions of inequality and redistribution in Colombia.</p>
+<div id="participants-1" class="section level3">
+<h3>Participants</h3>
+<p>1837 students from eight universities along different regions of Colombia participated in a research about perceptions of inequality and redistribution (<em>M<sub>age</sub> =</em> 21.99, <em>SD<sub>age</sub> =</em> 5.46, 65.75% female; 81.24% were undergraduates, 11.49% were enrolled in work training, 3.73% reached up to high school, and 3.52% held postgraduate education). Participants responded to an open call delivered by each university to participate in a study about social issues in Colombia. They were informed about the goals and conditions of the research and, if agreed in taking the study, they signed an informed consent and accessed to an online questionnaire. Data was collected during May 2018.</p>
 </div>
-<div id="material-1" class="section level2">
-<h2>Material</h2>
-<p><em>Support for redistribution:</em> Participants responded to eight items of support for redistribution selected from study 1 (<em>alpha =</em> .698). Likewise that in Study 1, respondents should rate their level of agreement with a set of statements by using a scale that ranged from 1 “strongly disagree” to 7 “strongly agree”.</p>
+<div id="material-1" class="section level3">
+<h3>Material</h3>
+<p><em>Support for redistribution:</em> Participants responded to eight items of support for redistribution selected from study 1 (<em>alpha =</em> .698). As in Study 1, respondents should rate their level of agreement with a set of statements by using a scale that ranged from 1 “strongly disagree” to 7 “strongly agree”.</p>
 <p><em>Economic system justification:</em> We used the short scale translated into Spanish by Jaume, Etchezahar, and Cervone (2012), which is composed by seven items regarding the legitimacy of economic inequalities in the society. Participants should rate each statement on a scale ranging from 1 “strongly disagree” to 7 “strongly agree” (<em>alpha</em> = .704). Some example items are: “the gap between social classes reflect the natural state of affairs of society” and “the economic position of people is a by-product of their achievements” (see supplementary material for wording of all the items).</p>
 <p><em>Meritocracy</em>: We translated and adapted into Spanish a scale of meritocracy used by Zimmerman and Reyna (2013) (<em>alpha =</em> .808). Participants were asked to indicate their support for several statements related to how people can get ahead in life by means of merit and hard work. Responses were rated in a seven-point scale from 1 “strongly disagree” to 7 “strongly agree”. Some example items are: “Hard working people achieve success in their life” and “In the Colombian society, getting ahead in life is possible for all the people that try it hard”.</p>
 <p><em>Scale of political self-positioning</em>: We used the left-right self-positioning scale, in which people should place themselves in a scale from 1 “Extremely left” to 7 “Extremely Right”.</p>
-<p><em>Perceptions of inequality</em>: We used several and different indicators of perceptions of inequality. First, we used the <em>perceived income gap</em>, which was operationalized as the ratio between the salary that participants think that earn a high status occupation (a CEO) and a low status occupation (blue-collar workers) in a large Colombian company. This ratio was log transformed in order to take care of some of the metric properties of this construct, as suggested by the social justice literature (Jasso &amp; Thornblom, 2015). Second, we included the <em>ideal income gap</em>, which was computed in the same way that the perceived income gap, but instead of asking for the current earnings people perceive, they should indicate how much a high status occupation and a low status occupation shoud earn. Third, we included the <em>general concern of economic inequality</em>, which is a composed measure of two items to which people should evaluate if economic inequality was too large (“In general, economic income differences in Colombia are to large” and “Economic income differences that I see around me are too large”) (<em>r~(df=1904) =</em> .72, <em>p &lt;</em> .001). Respondents have to use a 7-point scale from 1 “strongly disagree” to 7 “strongly agree”. Fourth, we used a single item to evaluate the <em>frequency</em> with which people perceive economic inequality in their daily life (i.e. “How frequent do you see situations concerning economic inequality in your daily-life”). This item was ranked in a 7-point scale from 1 “Never” to 7 “All the time”.</p>
-<p><em>Socioeconomic Status</em>: Participants indicated their approximate household income on a 10-point scale from 1 “Up to 781.242 pesos” (the minimum wage) to 10 “More than 7.021.000 pesos). Every point of the scale was increasing progressively by one Colombian minimum wage until it reached point 10. In addition, we used the McCarthur Scale to measure subjective socioeconomic status. For this indicator, people should rank themselves in a 10-point ladder, where the option at the bottom (1) represented the group of people with the lowest salaries, educational level, and occupational prestige of the society; whereas the option at the top (10) represented the group of people with the highest salaries, educational level, and occupational prestige of the society.</p>
+<p><em>Perceptions of inequality</em>: We used several and different indicators of perceptions of inequality. First, we used the <em>perceived income gap</em>, which was operationalized as the ratio between the salary that participants think that earn a high status occupation (a CEO) and a low status occupation (blue-collar workers) in a large company. This ratio was log transformed in order to take care of some of the metric properties of this construct, as suggested by the social justice literature (Jasso &amp; Thornblom, 2015). Second, we included the <em>ideal income gap</em>, which was computed in the same way that the perceived income gap, but instead of asking for the current earnings people perceive, they should indicate how much a high status occupation and a low status occupation should earn. Third, we included the <em>general concern of economic inequality</em>, which is a composed measure of two items to which people should evaluate if economic inequality was too large (“In general, economic income differences in Colombia are to large” and “Economic income differences that I see around me are too large”) (<em>r~(df=1904) =</em> .72, <em>p &lt;</em> .001). Respondents have to use a 7-point scale from 1 “strongly disagree” to 7 “strongly agree”. Fourth, we used a single item to evaluate the <em>frequency</em> with which people perceive economic inequality in their daily life (i.e. “How frequent do you see situations concerning economic inequality in your daily-life”). This item was ranked in a 7-point scale from 1 “Never” to 7 “All the time”.</p>
+<p><em>Socioeconomic Status</em>: Participants indicated their approximate household income on a 10-point scale from 1 “Up to 781.242 pesos” (the minimum wage) to 10 "More than 7.021.000 pesos). Every point of the scale was increasing progressively by one Colombian minimum wage until it reached point 10. In addition, we used the McCarthur Scale to measure subjective socioeconomic status. For this indicator, people should rank themselves in a 10-point ladder, where the option at the bottom (1) represented the group of people with the lowest salaries, educational level, and occupational prestige of the society; whereas the option at the top (10) represented the group of people with the highest salaries, educational level, and occupational prestige of the society.</p>
 </div>
-<div id="data-analysis-1" class="section level2">
-<h2>Data analysis</h2>
-<p>To replicate the two-factor structure of support for redistribution mesuremente, we conducted a confirmatory factor analysis with Maximum Likelihood (ML) estimator supported by Lavaan package (Rosseel, 2012) implemented for R software. We fitted a two-factor model, and evaluated the goodness of fit of two more alternative models. In addition, in order to test the convergent and divergent validity of the scale, we examined the relationship of each support for redistribution dimension to other constructs about perceptions of inequality, ideologies and socioeconomic status. We hypothesized that support for redistribution would be positively associated with perceived income gap (H<sub>1a</sub>), concerns of inequality (H<sub>1b</sub>), and frequency perception (H<sub>1c</sub>), but negatively associated with ideal income gap (H<sub>1d</sub>). As for ideological variables, we hypothesize that the more support for redistribution, the less endorsement of economic system justification (H<sub>2a</sub>), meritocracy (H<sub>2b</sub>), and political conservatism (H<sub>2c</sub>). Finally, following the self-interest hypothesis, it would be expected that support for redistribution is negatively associated with objective socioeconomic status (income) (H<sub>3a</sub>), subjective socioeconomic status (H<sub>3b</sub>), but positively associated with educational level (H<sub>3c</sub>).</p>
+<div id="data-analysis-1" class="section level3">
+<h3>Data analysis</h3>
+<p>To replicate the two-factor structure of support for redistribution mesuremente, we conducted a confirmatory factor analysis with Maximum Likelihood (ML) estimator. We fitted a two-factor model, and evaluated the goodness of fit of two more alternative models. In addition, in order to test the convergent and divergent validity of the scale, we examined the relationship of each support for redistribution dimension to other constructs about perceptions of inequality, ideologies and socioeconomic status. We hypothesized that support for redistribution would be positively associated with perceived income gap (H<sub>1a</sub>), concerns of inequality (H<sub>1b</sub>), and frequency perception (H<sub>1c</sub>), but negatively associated with ideal income gap (H<sub>1d</sub>). As for ideological variables, we hypothesize that the more support for redistribution, the less endorsement of economic system justification (H<sub>2a</sub>), meritocracy (H<sub>2b</sub>), and political conservatism (H<sub>2c</sub>). Finally, following the self-interest hypothesis, it would be expected that support for redistribution is negatively associated with objective socioeconomic status (income) (H<sub>3a</sub>), subjective socioeconomic status (H<sub>3b</sub>), but positively associated with educational level (H<sub>3c</sub>).[Estas hipótesis las subiría antes de la metodología, y las resumiría en un cuadro]</p>
+</div>
 </div>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
-<p>We conducted confirmatory factor analyses to estimate the two-factor model of support for redistribution: the role of the government to redistribute resources by implementing progressive taxation; and the role of the government to provide more assistance to the disadvantaged. As displayed in Table 3, the two-factor model obtained poor fit indices. We inspected the modification indices for this model, and found that there were two correlated errors that affected the structure of the model (<em>Modification Index<sub>item3-8</sub> =</em> 78.88). Thus, we estimated a two-factor model controlling for the correlated errors between items 3 and 8. Altough the model fit indices improved, we considered that both items differ conceptually. Indeed, both items are related to helping people in need, but item 3 depicts the idea that the government should provide more benefits, whereas item 8 mentions that the government should <em>rise taxes</em> to increase social spending. This distinction is also supported by the empirical performance of the item, since the average score was below the middle point of the scale (4) and positively skewed (<em>M<sub>item8</sub> =</em> 3.33, <em>SD<sub>item8</sub> =</em> 1.82, <em>Skew<sub>item8</sub> =</em> .33), whereas all the other items scored above the middle point and were negatively skewed. Therefore, we specified a two-factor model discarding item 8. We found that fit indices for this model outperformed all models estimated above (see Table 3).</p>
-<table style="width:100%;">
+<p>We conducted confirmatory factor analyses to estimate the two-factor model of support for redistribution: the role of the government to redistribute resources by implementing progressive taxation; and the role of the government to provide more assistance to the disadvantaged. As displayed in Table 3, the two-factor model obtained poor fit indices. We inspected the modification indices for this model, and found that there were two correlated errors that affected the structure of the model (<em>Modification Index<sub>item3-8</sub> =</em> 78.88). Thus, we estimated a two-factor model controlling for the correlated errors between items 3 and 8. Although the model fit indices improved, we considered that both items differ conceptually. Indeed, both items are related to helping people in need, but item 3 depicts the idea that the government should provide more benefits, whereas item 8 mentions that the government should <em>rise taxes</em> to increase social spending. This distinction is also supported by the empirical performance of the item, since the average score was below the middle point of the scale (4) and positively skewed (<em>M<sub>item8</sub> =</em> 3.33, <em>SD<sub>item8</sub> =</em> 1.82, <em>Skew<sub>item8</sub> =</em> .33), whereas all the other items scored above the middle point and were negatively skewed. Therefore, we specified a two-factor model discarding item 8. We found that fit indices for this model outperformed all models estimated above (see Table 3).</p>
+<table>
 <colgroup>
-<col width="80%" />
+<col width="82%" />
 <col width="3%" />
 <col width="1%" />
 <col width="2%" />
-<col width="3%" />
 <col width="2%" />
 <col width="2%" />
-<col width="3%" />
+<col width="2%" />
+<col width="2%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -820,12 +1076,12 @@ first draft manuscript
 </tr>
 </tbody>
 </table>
-<p>Once we have shown the two-dimension structure of the measure of support for redistribution, we tested how each dimension was associated with ideologies and perceptions about inequality, and with individual’s socioeconomic indicators (see Table 4). We found that dimensions of support for redistribution were associated with perceptions of inequality in different ways. Particularly, perceived income gap was positively associated with support for redistribution as reducing inequality by raising taxes, but not with support of redistribution framed as helping the disadvanted (H~1a). In addition, we also confirmed our hypohtesis that both dimensions of support for redistribution was positively related to concerns of inequality (H<sub>1b</sub>), and frequency perception of inequality (H<sub>1c</sub>), but negatively related to ideal inequality (H<sub>1d</sub>). Although these associations were consistent for both dimensions of support for redistribution, the effect size the dimension related to the government and progressive taxation was consistently higher than redistribution framed as social spending.</p>
+<p>Once we have shown the two-dimension structure of the measure of support for redistribution, we tested how each dimension was associated with ideologies and perceptions about inequality, and with individual’s socioeconomic indicators (see Table 4). We found that dimensions of support for redistribution were associated with perceptions of inequality in different ways. Particularly, perceived income gap was positively associated with support for redistribution as reducing inequality by raising taxes, but not with support of redistribution framed as helping the disadvantaged (H~1a). In addition, we also confirmed our hypothesis that both dimensions of support for redistribution were positively related to concerns of inequality (H<sub>1b</sub>), and frequency perception of inequality (H<sub>1c</sub>), but negatively related to ideal inequality (H<sub>1d</sub>). Although these associations were consistent for both dimensions of support for redistribution, the effect size the dimension related to the government and progressive taxation was consistently higher than redistribution framed as social spending.</p>
 <p>In addition, relations between support for redistribution and ideologies that justify inequality performed differently. First, the more individuals justified the economic system, the less support for the government to reduce economic inequality; whereas it was no associated with helping the disadvantaged (H<sub>2a</sub>). Second, meritocracy was negatively associated with the government role to reduce inequalities and raise taxes, but positively associated with helping the disadvantaged (H<sub>2b</sub>). That is, the more meritocracy, the less demand for the government to regulate the economy, but more demand for opportunities for people in need. Third, political ideology was negatively related to support for redistribution, so that reporting being more in the right (conservative) side of the political spectrum was linked to less support for both dimensions of support for redistribution (H<sub>2c</sub>).</p>
-<p>Individuals’ socioeconomic indicator were also related to support for redistribution in the hypothesized way. Thus, the higher household income (H<sub>3a</sub>) and subjective socioeconomic status (H<sub>3b</sub>), the less endorsement of both dimensions of support for redistribution. On the other hand, we did not find support for H<sub>3c</sub> that posited that educational level would be relatd to more preference for redistribution. Indeed, there was a small negative correlation between educational level and support for social speding, such that the higher the educational degree, the less acceptance helping the disadvantaged.</p>
+<p>Individuals’ socioeconomic indicators were also related to support for redistribution in the hypothesized way. Thus, the higher household income (H<sub>3a</sub>) and subjective socioeconomic status (H<sub>3b</sub>), the less endorsement of both dimensions of support for redistribution. On the other hand, we did not find support for H<sub>3c</sub> that posited that educational level would be related to more preference for redistribution. Indeed, there was a small negative correlation between educational level and support for social spending, such that the higher the educational degree, the less acceptance helping the disadvantaged.</p>
 <table style="width:100%;">
 <colgroup>
-<col width="40%" />
+<col width="42%" />
 <col width="5%" />
 <col width="5%" />
 <col width="5%" />
@@ -837,7 +1093,7 @@ first draft manuscript
 <col width="5%" />
 <col width="4%" />
 <col width="4%" />
-<col width="3%" />
+<col width="2%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -906,7 +1162,7 @@ first draft manuscript
 <td>3. Meritocracy</td>
 <td>-0.137***</td>
 <td>0.070**</td>
-<td>â“</td>
+<td>â</td>
 <td></td>
 <td></td>
 <td></td>
@@ -1102,15 +1358,10 @@ first draft manuscript
 </div>
 <div id="discussion-points-800-words" class="section level1">
 <h1>Discussion points (800 words)</h1>
-<ul>
-<li><p>Literature on support for redistribution is conducted by a wide variety of indicators that focus on different dimensions, which mix findings. *Core <a href="message:*" class="uri">message:*</a> We provide empirical evidence regarding the two-dimensions of support for redistribution proposed by McCall and Kenworthy (2009), and how each dimension is differently associated with perceptions and beliefs abour inequality.</p></li>
-<li>General items about redistribution (i.e. the government should redistribute resources), do not say how to do so. Thus, it is important to be more specific when measuring attitudes toward redistribution to capture not only the desire for redistribution, but also the support for ways to do so.</li>
-<li><p>Dicussion point: people do not understand that this is part of a collective process; so people are thinkig about themselves and their more inmediate benefits.</p></li>
-<li><p>Dimensions of support for redistribution might be driven by different social psychological processes: on the one hand, the idea of redistribution of resources by taking away from the rich (self-interest, system justification, unfairness); on the other hand, social spending might be related to integroup processes (social dominance, prejudice, attributions of poverty, fairness). More research should be done.</p></li>
-<li><p>From an attitudinal point of view, people might be willing to help the disadvantage, or be in favor that the government should do something to reduce inequality. But, at the same time, they might be against of raising taxes, or be reluctant to give a bigger share of their incomes/wealth (becaused they deserved it, or feel entitled).</p></li>
-<li><p>Given the effect size of the correlations, it might be expected that with smaller sample size, attitudes toward social spending were not significant. Thus, better to use the redistribution of economic resources indicators.</p></li>
-<li><p>Although we propose a two dimensions of support for redistribution, it is plausible that there are other underlying dimensions based on the responsible to redistribute (government vs. private organizations), How to collect the resources (taxes vs. donations), who benefits from redistribution (everyone vs. disadvantaged), why is important to redistribute (fairness, efficiency, etc.)</p></li>
-</ul>
+<p>In this paper we provide empirical evidence regarding two dimensions of support for redistribution proposed by McCall and Kenworthy (2009): one related with shrinking economic gaps while the other with spending more on the needy. This finding has a series of consequences. First, distinguishing between the two faces of attitudes towards redistribution is relevant for the comparability of results from different studies. Here it is easy to fall into confusion based on the “face validity” of indicators: as they look similar, they should refer to the same concept. As we know, this assumption should and can be empirically tested in order to make valid statements regarding the scope of the different concepts. We think that this aspect of research on support of redistribution has been probably neglected firstly because most of the studies rely on single indicators that do not allow for testing the latent structure of items used, and secondly because the latent variable methods are more away from the disciplines that so far have leaded distributive research, as economy and political science. In this sense we believe that conceptual and methodological contributions from social psychology to this area can help bringing some insights that open new research possibilities in a multidisciplinary framework.</p>
+<p>The distinction between the two faces of redistributive attitudes also brings about some conceptual challenges. For instance, from an attitudinal point of view people might be willing to help the disadvantaged, or be in favor that the government should do something to reduce inequality. But, at the same time, they might be against of raising taxes, or be reluctant to give a bigger share of their incomes/wealth (becaused they deserved it, or feel entitled). Therefore, disentangling these two dimensions calls for renewed conceptual frameworks able to handle different and apparently contradictory predispositions towards social policies.</p>
+<p>The dimensions of support for redistribution might be driven by different social psychological processes: on the one hand, the idea of redistribution of resources by taking away from the rich (self-interest, system justification, unfairness); on the other hand, social spending might be related to integroup processes (social dominance, prejudice, attributions of poverty, fairness). More research should be done [expandir idea].</p>
+<p>Although we propose a two dimensional model for support for redistribution, it is also plausible that there are other underlying dimensions based on the responsible to redistribute (government vs. private organizations), how to collect the resources (taxes vs. donations), who benefits from redistribution (everyone vs. disadvantaged), as well as why is important to redistribute (fairness, efficiency, etc.). Further research should take into account more deeply these distinctions in order to offer a more comprehensive picture of redistributive attitudes.</p>
 </div>
 <div id="references-pending" class="section level1">
 <h1>References (pending)</h1>
@@ -1118,61 +1369,79 @@ first draft manuscript
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
 <pre class="r"><code>sessionInfo()
-#&gt; R version 3.5.1 (2018-07-02)
-#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)
-#&gt; Running under: Windows 10 x64 (build 17134)
+#&gt; R version 3.4.4 (2018-03-15)
+#&gt; Platform: x86_64-pc-linux-gnu (64-bit)
+#&gt; Running under: Ubuntu 16.04.6 LTS
 #&gt; 
 #&gt; Matrix products: default
+#&gt; BLAS: /usr/lib/libblas/libblas.so.3.6.0
+#&gt; LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
 #&gt; 
 #&gt; locale:
-#&gt; [1] LC_COLLATE=Spanish_Spain.1252  LC_CTYPE=Spanish_Spain.1252   
-#&gt; [3] LC_MONETARY=Spanish_Spain.1252 LC_NUMERIC=C                  
-#&gt; [5] LC_TIME=Spanish_Spain.1252    
+#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+#&gt;  [3] LC_TIME=es_CL.UTF-8        LC_COLLATE=en_US.UTF-8    
+#&gt;  [5] LC_MONETARY=es_CL.UTF-8    LC_MESSAGES=en_US.UTF-8   
+#&gt;  [7] LC_PAPER=es_CL.UTF-8       LC_NAME=C                 
+#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+#&gt; [11] LC_MEASUREMENT=es_CL.UTF-8 LC_IDENTIFICATION=C       
 #&gt; 
 #&gt; attached base packages:
 #&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
 #&gt; 
 #&gt; other attached packages:
-#&gt;  [1] lavaan_0.6-2      labelled_1.1.0    sjlabelled_1.0.12
-#&gt;  [4] workflowr_1.1.1   kableExtra_0.9.0  corrplot_0.84    
-#&gt;  [7] TMB_1.7.14        effects_4.0-2     carData_3.0-1    
-#&gt; [10] lmerTest_3.0-1    haven_1.1.2       lsmeans_2.27-62  
-#&gt; [13] nlme_3.1-137      sjPlot_2.5.0      dplyr_0.7.6      
-#&gt; [16] xtable_1.8-2      texreg_1.36.23    psych_1.8.4      
-#&gt; [19] stargazer_5.2.2   foreign_0.8-70    lme4_1.1-17      
-#&gt; [22] Matrix_1.2-14    
+#&gt;  [1] lavaan_0.5-23.1097 labelled_2.1.0     sjlabelled_1.0.10 
+#&gt;  [4] kableExtra_0.8.0   corrplot_0.84      TMB_1.7.12        
+#&gt;  [7] effects_4.0-0      carData_3.0-0      lmerTest_2.0-36   
+#&gt; [10] haven_2.1.0        lsmeans_2.27-61    nlme_3.1-137      
+#&gt; [13] sjPlot_2.4.1       dplyr_0.8.0.1      xtable_1.8-2      
+#&gt; [16] texreg_1.36.23     psych_1.7.8        stargazer_5.2     
+#&gt; [19] foreign_0.8-70     lme4_1.1-14        Matrix_1.2-14     
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
-#&gt;  [1] httr_1.3.1         rprojroot_1.3-2    numDeriv_2016.8-1 
-#&gt;  [4] tools_3.5.1        backports_1.1.2    R6_2.2.2          
-#&gt;  [7] lazyeval_0.2.1     colorspace_1.3-2   nnet_7.3-12       
-#&gt; [10] tidyselect_0.2.4   mnormt_1.5-5       emmeans_1.2.3     
-#&gt; [13] compiler_3.5.1     git2r_0.23.0       rvest_0.3.2       
-#&gt; [16] pacman_0.4.6       xml2_1.2.0         sandwich_2.4-0    
-#&gt; [19] scales_0.5.0       lmtest_0.9-36      mvtnorm_1.0-8     
-#&gt; [22] readr_1.1.1        ggridges_0.5.0     pbivnorm_0.6.0    
-#&gt; [25] stringr_1.3.1      digest_0.6.15      minqa_1.2.4       
-#&gt; [28] rmarkdown_1.10     R.utils_2.6.0      stringdist_0.9.5.1
-#&gt; [31] pkgconfig_2.0.1    htmltools_0.3.6    pwr_1.2-2         
-#&gt; [34] rlang_0.2.1        rstudioapi_0.7     bindr_0.1.1       
-#&gt; [37] zoo_1.8-3          R.oo_1.22.0        magrittr_1.5      
-#&gt; [40] modeltools_0.2-22  bayesplot_1.6.0    Rcpp_0.12.18      
-#&gt; [43] munsell_0.5.0      abind_1.4-5        prediction_0.3.6  
-#&gt; [46] R.methodsS3_1.7.1  stringi_1.1.7      multcomp_1.4-8    
-#&gt; [49] whisker_0.3-2      yaml_2.2.0         snakecase_0.9.1   
-#&gt; [52] MASS_7.3-50        plyr_1.8.4         grid_3.5.1        
-#&gt; [55] parallel_3.5.1     sjmisc_2.7.4       forcats_0.3.0     
-#&gt; [58] crayon_1.3.4       lattice_0.20-35    ggeffects_0.4.0   
-#&gt; [61] splines_3.5.1      sjstats_0.16.0     hms_0.4.2         
-#&gt; [64] knitr_1.20         pillar_1.3.0       estimability_1.3  
-#&gt; [67] codetools_0.2-15   stats4_3.5.1       glue_1.3.0        
-#&gt; [70] evaluate_0.11      data.table_1.11.4  modelr_0.1.2      
-#&gt; [73] nloptr_1.0.4       gtable_0.2.0       purrr_0.2.5       
-#&gt; [76] tidyr_0.8.1        assertthat_0.2.0   ggplot2_3.0.0     
-#&gt; [79] coin_1.2-2         broom_0.5.0        survey_3.33-2     
-#&gt; [82] coda_0.19-1        viridisLite_0.3.0  survival_2.42-3   
-#&gt; [85] tibble_1.4.2       arm_1.10-1         glmmTMB_0.2.2.0   
-#&gt; [88] bindrcpp_0.2.2     TH.data_1.0-9</code></pre>
+#&gt;   [1] backports_1.1.2      Hmisc_4.0-3          blme_1.0-4          
+#&gt;   [4] workflowr_1.1.1      plyr_1.8.4           igraph_1.1.2        
+#&gt;   [7] lazyeval_0.2.1       splines_3.4.4        crosstalk_1.0.0     
+#&gt;  [10] ggplot2_3.1.0        TH.data_1.0-8        rstantools_1.5.0    
+#&gt;  [13] inline_0.3.14        digest_0.6.15        htmltools_0.3.6     
+#&gt;  [16] rsconnect_0.8.8      magrittr_1.5         checkmate_1.8.5     
+#&gt;  [19] cluster_2.0.7-1      readr_1.1.1          brms_2.2.0          
+#&gt;  [22] modelr_0.1.1         matrixStats_0.53.1   R.utils_2.7.0       
+#&gt;  [25] xts_0.10-2           sandwich_2.4-0       colorspace_1.3-2    
+#&gt;  [28] rvest_0.3.2          xfun_0.5             crayon_1.3.4        
+#&gt;  [31] survival_2.43-3      zoo_1.8-0            glue_1.3.1          
+#&gt;  [34] gtable_0.2.0         emmeans_1.2          sjstats_0.14.3      
+#&gt;  [37] sjmisc_2.7.2         rstan_2.17.3         abind_1.4-5         
+#&gt;  [40] scales_0.5.0         mvtnorm_1.0-6        ggeffects_0.3.3     
+#&gt;  [43] miniUI_0.1.1         Rcpp_1.0.1           viridisLite_0.2.0   
+#&gt;  [46] merTools_0.3.0       htmlTable_1.11.0     Formula_1.2-2       
+#&gt;  [49] stats4_3.4.4         prediction_0.2.0     StanHeaders_2.17.2  
+#&gt;  [52] survey_3.32-1        DT_0.2               httr_1.3.1          
+#&gt;  [55] htmlwidgets_0.9      threejs_0.3.1        RColorBrewer_1.1-2  
+#&gt;  [58] acepack_1.4.1        modeltools_0.2-21    pkgconfig_2.0.2     
+#&gt;  [61] loo_2.0.0            R.methodsS3_1.7.1    nnet_7.3-12         
+#&gt;  [64] tidyselect_0.2.5     rlang_0.3.2          reshape2_1.4.3      
+#&gt;  [67] later_0.7.2          munsell_0.4.3        tools_3.4.4         
+#&gt;  [70] pacman_0.4.6         broom_0.4.3          ggridges_0.5.0      
+#&gt;  [73] evaluate_0.13        stringr_1.4.0        arm_1.9-3           
+#&gt;  [76] yaml_2.1.19          knitr_1.22           purrr_0.3.2         
+#&gt;  [79] coin_1.2-2           whisker_0.3-2        mime_0.5            
+#&gt;  [82] R.oo_1.22.0          xml2_1.2.0           rstudioapi_0.7      
+#&gt;  [85] compiler_3.4.4       bayesplot_1.5.0      shinythemes_1.1.1   
+#&gt;  [88] tibble_2.1.1         pbivnorm_0.6.0       stringi_1.3.1       
+#&gt;  [91] Brobdingnag_1.2-5    forcats_0.2.0        lattice_0.20-38     
+#&gt;  [94] nloptr_1.0.4         markdown_0.8         shinyjs_1.0         
+#&gt;  [97] stringdist_0.9.4.6   pillar_1.3.1         pwr_1.2-1           
+#&gt; [100] lmtest_0.9-35        bridgesampling_0.4-0 estimability_1.3    
+#&gt; [103] data.table_1.10.4-3  httpuv_1.4.3         R6_2.4.0            
+#&gt; [106] latticeExtra_0.6-28  promises_1.0.1       gridExtra_2.3       
+#&gt; [109] codetools_0.2-15     colourpicker_1.0     MASS_7.3-50         
+#&gt; [112] gtools_3.5.0         assertthat_0.2.1     rprojroot_1.3-2     
+#&gt; [115] shinystan_2.5.0      mnormt_1.5-5         multcomp_1.4-8      
+#&gt; [118] parallel_3.4.4       hms_0.4.0            quadprog_1.5-5      
+#&gt; [121] grid_3.4.4           rpart_4.1-13         tidyr_0.8.1         
+#&gt; [124] coda_0.19-1          glmmTMB_0.2.0        minqa_1.2.4         
+#&gt; [127] rmarkdown_1.12       snakecase_0.9.1      git2r_0.19.0        
+#&gt; [130] shiny_1.0.5          base64enc_0.1-3      dygraphs_1.1.1.4</code></pre>
 </div>
 </div>
 
@@ -1197,6 +1466,8 @@ footer is added to webpages before the MathJax javascript. -->
 <hr>
 
 
+</div>
+</div>
 
 </div>
 
